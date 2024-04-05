@@ -20,7 +20,7 @@ public class UserResource {
 	@Autowired
 	private UserService service;
 	
-	@RequestMapping(method=RequestMethod.GET)
+	@GetMapping
  	public ResponseEntity<List<UserDTO>> findAll() {
 		List<User> list = service.findAll();
 		List<UserDTO> listDto = list.stream().map(x -> new UserDTO(x)).collect(Collectors.toList());
@@ -44,6 +44,14 @@ public class UserResource {
 	@DeleteMapping("/{id}")
  	public ResponseEntity<Void> delete(@PathVariable String id) {
 		service.delete(id);
+		return ResponseEntity.noContent().build();
+	}
+	
+	@PutMapping("/{id}")
+ 	public ResponseEntity<Void> update(@RequestBody UserDTO objDto, @PathVariable String id) {
+		User obj = service.fromDTO(objDto);
+		obj.setId(id);
+		obj = service.update(obj);
 		return ResponseEntity.noContent().build();
 	}
 	
